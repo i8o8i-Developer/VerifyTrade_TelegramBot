@@ -1,0 +1,6 @@
+python-telegram-bot
+yfinance
+pandas
+requests
+beautifulsoup4
+lxml

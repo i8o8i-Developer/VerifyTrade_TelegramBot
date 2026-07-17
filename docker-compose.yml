@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: verifytrade_bot
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - FMP_API_KEY=${FMP_API_KEY}
+      - DB_PATH=/app/data/Portfolio.db
+    volumes:
+      - bot_data:/app/data
+
+volumes:
+  bot_data:

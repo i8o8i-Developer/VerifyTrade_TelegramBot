@@ -1,0 +1,14 @@
+# Ignore Environment Variables File
+.env
+
+# Ignore Python Cache Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Local Database File
+Portfolio.db
+
+# Ignore Docker Volumes
+data/
