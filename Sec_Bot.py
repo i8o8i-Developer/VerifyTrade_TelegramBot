@@ -1465,9 +1465,27 @@ async def HandleMessage(Update_: Update, Context: ContextTypes.DEFAULT_TYPE):
     if len(report) <= 4000:
         await Update_.message.reply_text(report, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
     else:
-        for chunk_start in range(0, len(report), 4000):
+        chunks = []
+        current_chunk = ""
+        for line in report.split("\n"):
+            if len(current_chunk) + len(line) + 1 > 3900:  # 
+                if current_chunk.strip():
+                    chunks.append(current_chunk.strip())
+                current_chunk = line + "\n"
+            else:
+                current_chunk += line + "\n"
+        if current_chunk.strip():
+            chunks.append(current_chunk.strip())
+
+        total_parts = len(chunks)
+        for index, chunk in enumerate(chunks, 1):
+            if total_parts > 1:
+                chunk_text = f"<i>(Part {index} Of {total_parts})</i>\n\n{chunk}"
+            else:
+                chunk_text = chunk
+
             await Update_.message.reply_text(
-                report[chunk_start:chunk_start + 4000],
+                chunk_text,
                 parse_mode=ParseMode.HTML,
                 disable_web_page_preview=True,
             )
@@ -1634,6 +1652,8 @@ def Main():
         .token(BOT_TOKEN)
         .post_init(PostInit)
         .post_shutdown(PostShutdown)
+        .concurrent_updates(8)
+        .connection_pool_size(16)
         .build()
     )
 
